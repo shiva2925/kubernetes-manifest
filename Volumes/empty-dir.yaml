@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-empty-dir
+spec:
+  containers:
+    - name: nginx-empty-1
+      image: nginx
+      ports:
+        - containerPort: 80
+      volumeMounts:
+        - name: type-empty
+          mountPath: /var/www/html
+  volumes:
+    - name: type-empty
+      emptyDir: 
+        medium: Memory  # this will create empty-dir volume in RAM
+        sizeLimit: 300Mi # size of the RAM (by default, it will pick 50% of total RAM the node)

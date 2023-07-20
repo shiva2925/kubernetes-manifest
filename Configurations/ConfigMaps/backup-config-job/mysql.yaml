@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-cm-deploy
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+      env: production
+  template:
+    metadata:
+      labels:
+        app: mysql
+        env: production
+    spec:
+      containers:
+        - name: mysql
+          image: mysql
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+          envFrom:
+            - configMapRef:
+                name: sql-volume
+              
+      volumes:
+        - name: mysql-data
+          emptyDir: {}

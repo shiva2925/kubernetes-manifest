@@ -1,0 +1,20 @@
+# Add this file in /etc/kubernetes/manifest 
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: static-pod
+  labels:
+    app: nginx
+    env: dev
+spec: 
+  containers:
+    - name: nginx-container
+      image: nginx
+      ports: 
+        - containerPort: 80
+      volumeMounts:
+        - name: static-volume
+          mountPath: /usr/share/nginx/html
+  volumes:
+    - name: static-volume
+      emptyDir: {}

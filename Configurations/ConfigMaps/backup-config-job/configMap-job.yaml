@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-db-backup
+
+data:
+  mysql-db.sh: |        ## below the script will take the backup of MySQL server and store that backup in /mnt/mysql-cm-db//mysql-db-cm-backup.sh in the SQL pod
+      #!/bin/bash
+      echo "mysql data backup initialized"
+      mysqldump -hmysql-cm-service -uroot -proot1234 --all-databases > /mnt/mysql-cm-db//mysql-db-cm-backup.sh 
+      echo "mysql database backup has been done"
+immutable: true
+  
+
+    
+    

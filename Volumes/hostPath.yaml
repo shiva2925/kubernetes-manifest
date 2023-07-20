@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-hostpath-dir
+spec:
+  containers:
+    - name: nginx-hostpath-1
+      image: nginx
+      ports:
+        - containerPort: 80
+      volumeMounts:
+        - name: type-hostpath
+          mountPath: /var/www/html/
+  volumes:
+    - name: type-hostpath
+      hostPath:
+        path: /var/shiva #( we dont have this directory in the machine)
+       # type: Directory # if type Directory, /var/shiva directory should be available then only the volume will get mount 
+        type: DirectoryOrCreate  # if type DirectoryOrCreate, if /var/shiva sirectory is exist it will mount,            else it will create and mount.
+      

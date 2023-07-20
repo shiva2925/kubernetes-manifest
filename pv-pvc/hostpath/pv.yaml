@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-hostpath
+spec:
+  storageClassName: host-path
+  capacity:    # add capacity to create persistence volume
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce 
+  hostPath:           # using hostpath type driver persistent volume 
+    path: /mnt/pv-data
+    type: DirectoryOrCreate

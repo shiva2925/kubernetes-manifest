@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-rs
+  labels:
+    app: nginx
+    env: dev
+spec:
+  replicas: 3
+  selector:
+    matchExpressions:
+      # app: nginx-pod
+      # env: dev
+      # - {key: app,operator: In, values: ["nginx-pod","nginx-test"]}
+      # - {key: env, operator: NotIn, values: ["qa"]}
+      - {key: app,operator: In, values: ["nginx-pod","nginx-test"]}
+      - {key: env, operator: NotIn, values: ["qa"]}
+
+  template:
+    metadata:
+      name: nginx-pod-rs
+      labels:
+        app: nginx-test
+        env: dev
+    spec:
+      containers:
+        - name: nginx-rs-pod
+          image: nginx
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: "0.2"
+              memory: "100Mi"

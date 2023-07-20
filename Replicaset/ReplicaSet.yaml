@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-rs
+spec:
+  replicas: 3
+  selector:
+    # matchLabels: // we can use and matchLabels and matchExpressions at a time, it act as a AND operation both conditions should match
+    #   app: nginx
+    #   env: dev
+    matchExpressions:
+      - {key: release, operator: DoesNotExist }
+      - {key: env, operator: In, values: ["dev","test"]}
+  template:
+    metadata: 
+      labels:
+        app: nginx
+        env: dev
+    spec:
+      containers:
+        - name: nginx-rs-c
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: nginx-rs-data
+              mountPath: /usr/share/nginx/html
+      restartPolicy: Always
+      volumes:
+        - name: nginx-rs-data
+          emptyDir: {}
+         
+          

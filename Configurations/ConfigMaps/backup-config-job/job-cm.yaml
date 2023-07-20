@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mysql-cm-db-backup
+spec:
+  template:
+    spec:
+      containers:
+      - name: mysql-backup
+        image: mysql:8.0
+        ports:
+          - containerPort: 3306
+        command: ["/bin/sh", "-c", "bash /tmp/mysql-db-script.sh"] ## 3) configMap script file will be used to take the back of the MySQL server
+        volumeMounts:                                                 #   and stored in /mnt/mysql-cm-db//mysql-db-cm-backup.sh 
+          - name: backupdata-store 
+            mountPath: /mnt/mysql-cm-db/  # 4) MySQL backup data will copied under this location in the container and it is added in hostpath volume backupdata-store  
+
+          - name: mysql-script
+            mountPath: /tmp/     # 2) in this location script file mysql-db-script.sh will copy from the pod.
+      restartPolicy: OnFailure
+      volumes:
+        - name: backupdata-store
+          hostPath:
+            path: /mnt/mysql-cm-db-local # 5) finaly MySQL backupdata will be saved in /mnt/mysql-cm-db-local in pod lounched node
+            type: DirectoryOrCreate
+        - name: mysql-script   
+          configMap:              
+            name: mysql-db-backup
+            items:
+              - key: mysql-db.sh        ## 1) this volume will pull the script file(mysql-db.sh) from the ConfigMap object and save with mysql-db-script.sh file name 
+                path: mysql-db-script.sh   # and save with mysql-db-script.sh file name inside pod
+        

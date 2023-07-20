@@ -1,0 +1,35 @@
+## in this file we want to create statefull-set, this statefull-set object will create pod in the background.we want to bind each pod with PV so we need to create dynamic PVC to bine the PV by using "volumeClaimTemplate". this functionality is only available on STS.
+apiVersion: apps/v1
+kind: StatefulSet
+metadata: 
+  name: hostpath-sts
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - image: nginx
+          name: sts-nginx-c1
+          ports: 
+            - containerPort: 80
+              protocol: TCP
+          volumeMounts:
+            - name: sts-data
+              mountPath: /usr/share/nginx/html/
+  volumeClaimTemplates:      ## this volumeClaimTempate will create dynamic PVC based on replicas. if itscreate 3 replicas, 3 PVC will create.
+      - metadata:
+          name: sts-data
+        spec:
+          storageClassName: sts-hostpath
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 1Gi
+           
+

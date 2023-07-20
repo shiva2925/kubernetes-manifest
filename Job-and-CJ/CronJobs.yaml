@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cronjob-demo
+spec:
+  schedule: "*/2 * * * *"   # minuts(0-59)  hours(0-23)  days(1-31)  month(1-12) day_of_week(0-6)
+  successfulJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 30
+      template:
+        spec:
+          containers:
+            - name: nginx-cj
+              image: alpine
+              args:
+                - "/bin/sh"
+                - "-c"
+                - "date && echo 'welcome to cjob'"
+          restartPolicy: OnFailure
+

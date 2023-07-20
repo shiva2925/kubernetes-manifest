@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nginx-daemon-set
+spec:
+  revisionHistoryLimit: 5
+  selector:
+    matchExpressions:
+      - {key: release, operator: DoesNotExist }
+      - {key: env, operator: In, values: ["dev","test"]}
+  updateStrategy:
+    type: OnDelete
+  template:
+    metadata: 
+      labels:
+        app: nginx
+        env: dev
+    spec:
+      containers:
+        - name: nginx-ds-c
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: nginx-ds-data
+              mountPath: /usr/share/nginx/html
+      restartPolicy: Always
+      volumes:
+        - name: nginx-ds-data
+          emptyDir: {}
+         
+          

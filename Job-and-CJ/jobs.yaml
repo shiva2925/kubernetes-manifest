@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: demo-job
+spec:
+  ttlSecondsAfterFinished: 30    # delete the pod and job automaticly once finished the job task after given time
+  suspend: true   #  if we dont want to create pod right after creating job then we want to add suspend: true it will not create untill we   change to false.
+  backoffLimit: 3 #restart policy is never, if any occurs in the pod then new pod will be created ratherthen starting pod. so we set the limit to how many pods will be create.
+  template:
+    spec:
+      containers:
+        - name: alpine-c
+          image: alpine
+          command: ["/bin/sh"]
+          args: ["-c", "ls -l /abcd"]
+      restartPolicy: OnFailure
+

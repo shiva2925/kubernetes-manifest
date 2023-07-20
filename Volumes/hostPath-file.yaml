@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-hostpath-dir
+spec:
+  containers:
+    - name: nginx-hostpath-1
+      image: nginx
+      ports:
+        - containerPort: 80
+      volumeMounts:
+        - name: type-hostpath
+          mountPath: /var/www/html/
+  volumes:
+    - name: type-hostpath
+      hostPath:
+        path: /var/shiva/index.html #this file will be added in container mountPath location, which is in host machine
+        type: File # type File only mount if file called /var/shiva/index.html is exist in the most machine, if we want to create, if file not exist then we need to use type: FileOrCreate
+        # type: FileOrCreate
+      
